@@ -416,6 +416,23 @@ class Article < Content
     user.admin? || user_id == user.id
   end
 
+  def merge_with(other_article_id)
+    other_article = Article.find_by_id(other_article_id)
+    if self == other_article or other_article == nil
+      return false
+    end
+    self.body += other_article.body
+    self.save!
+    puts "after self.save first time: ", self.body
+    for comment in other_article.comments
+      comment.article = self
+    end
+    self.comments += other_article.comments
+    self.save!
+    #other_article.destroy
+    return true
+  end
+
   protected
 
   def set_published_at
@@ -466,22 +483,4 @@ class Article < Content
     to = to - 1 # pull off 1 second so we don't overlap onto the next day
     return from..to
   end
-
-  def merge_with(other_article_id)
-    other_article = Article.find_by_id(other_article_id)
-    if self == other_article or other_article == nil
-      return false
-    end
-    self.body += other_article.body
-    self.save!
-    puts "after self.save first time: ", self.body
-    for comment in other_article.comments
-      comment.article = self
-    end
-    self.comments += other_article.comments
-    self.save!
-    #other_article.destroy
-    return true
-  end
-
 end
