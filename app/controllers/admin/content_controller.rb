@@ -128,7 +128,7 @@ class Admin::ContentController < Admin::BaseController
     render :text => nil
   end
 
-  # protected
+  protected
 
   def get_fresh_or_existing_draft_for_article
     if @article.published and @article.id
@@ -155,11 +155,7 @@ class Admin::ContentController < Admin::BaseController
   def real_action_for(action); { 'add' => :<<, 'remove' => :delete}[action]; end
 
   def new_or_edit
-    if not params[:merge_with].nil? and params[:merge_with] != ""
-      if current_user.admin?
-        merge_with
-      end
-    end
+
 
     id = params[:id]
     id = params[:article][:id] if params[:article] && params[:article][:id]
@@ -178,9 +174,8 @@ class Admin::ContentController < Admin::BaseController
     end
 
     @article.keywords = Tag.collection_to_string @article.tags
-
     @article.attributes = params[:article]
-
+    
     if not params[:merge_with].nil? and params[:merge_with] != ""
       if current_user.admin?
         merge_with

@@ -429,7 +429,7 @@ class Article < Content
     end
     self.comments += other_article.comments
     self.save!
-    #other_article.destroy
+    other_article.destroy
     return true
   end
 
