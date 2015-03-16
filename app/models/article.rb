@@ -423,13 +423,11 @@ class Article < Content
     end
     self.body += other_article.body
     self.save!
-    puts "after self.save first time: ", self.body
     for comment in other_article.comments
-      comment.article = self
+      new_comment = add_comment(:user => comment.user, :author => comment.author, :article => self, :body => comment.body, :id => self.id)
+      new_comment.save!
     end
-    self.comments += other_article.comments
-    self.save!
-    # other_article.destroy
+    other_article.destroy
     return true
   end
 
