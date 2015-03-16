@@ -148,15 +148,15 @@
     </ul>
   </div>
 
+ <% if @article.id and current_user.admin? %>
   <div class=''>
     <h4><%= ("Merge Articles") %></h4>
-
     <%= form_tag :action => "merge_with", :method => 'POST', :id => @article.id do %>
       <%= label_tag "merge_with", "Article ID" %>
       <%= text_field_tag "merge_with" %>
       <%= submit_tag "Merge" %>
     <% end %>
-
+<% end %>
 
 <!--     <form action="merge_with" id=@article.id>
       Article ID: <input type="text" name="merge_with"><br>
