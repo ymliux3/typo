@@ -178,9 +178,9 @@ class Admin::ContentController < Admin::BaseController
 
     @article.keywords = Tag.collection_to_string @article.tags
 
-    if params[:merge_with].nil? or params[:merge_with] == ""
-      @article.attributes = params[:article]
-    end
+    # if params[:merge_with].nil? or params[:merge_with] == ""
+    @article.attributes = params[:article]
+    # end
 
 
     # TODO: Consider refactoring, because double rescue looks... weird.
