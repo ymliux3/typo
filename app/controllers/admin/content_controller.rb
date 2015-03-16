@@ -117,6 +117,16 @@ class Admin::ContentController < Admin::BaseController
     render :text => nil
   end
 
+  def merge_with
+    puts "lalalalalala"
+    article = Article.find_by_id(params[:id])
+    if article.merge_with(params[:merge_with])
+      flash[:notice] = _("Articles successfully merged!")
+    else
+      flash[:notice] = _("Articles couldn't be merged")
+    end
+  end
+
   protected
 
   def get_fresh_or_existing_draft_for_article
@@ -144,13 +154,10 @@ class Admin::ContentController < Admin::BaseController
   def real_action_for(action); { 'add' => :<<, 'remove' => :delete}[action]; end
 
   def new_or_edit
-    puts "I'm hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee :("
     if not params[:merge_with].nil? and params[:merge_with] != ""
-      puts "HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
       merge_with
-    else
-      puts "it's nil****************************"
     end
+
     id = params[:id]
     id = params[:article][:id] if params[:article] && params[:article][:id]
     @article = Article.get_or_build_article(id)
@@ -168,7 +175,11 @@ class Admin::ContentController < Admin::BaseController
     end
 
     @article.keywords = Tag.collection_to_string @article.tags
-    @article.attributes = params[:article]
+
+    if params[:merge_with].nil? or params[:merge_with] == ""
+      @article.attributes = params[:article]
+    end
+
     # TODO: Consider refactoring, because double rescue looks... weird.
         
     @article.published_at = DateTime.strptime(params[:article][:published_at], "%B %e, %Y %I:%M %p GMT%z").utc rescue Time.parse(params[:article][:published_at]).utc rescue nil
@@ -187,6 +198,7 @@ class Admin::ContentController < Admin::BaseController
         return
       end
     end
+
 
     @images = Resource.images_by_created_at.page(params[:page]).per(10)
     @resources = Resource.without_images_by_filename
@@ -252,17 +264,4 @@ class Admin::ContentController < Admin::BaseController
     @resources = Resource.by_created_at
   end
 
-  def merge_with
-    puts "lalalalalala"
-    article = Article.find_by_id(params[:id])
-    if article.merge_with(params[:merge_with])
-      flash[:notice] = _("Articles successfully merged!")
-    else
-      flash[:notice] = _("Articles couldn't be merged")
-    end
-  end
-  #   puts "hereeeeeeeeeeeeeeeeeeee lalalalalala"
-  #   article = Article.find_by_id(params[:id])
-
-  # end
 end
