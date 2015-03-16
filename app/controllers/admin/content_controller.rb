@@ -13,8 +13,9 @@ class Admin::ContentController < Admin::BaseController
 
   def index
     if not params[:merge_with].nil?
-      puts "index merged with **********************"
-      merge_with
+      if current_user.admin?
+        merge_with
+      end
     end
     @search = params[:search] ? params[:search] : {}
     
@@ -118,7 +119,6 @@ class Admin::ContentController < Admin::BaseController
   end
 
   def merge_with
-    puts "lalalalalala"
     article = Article.find_by_id(params[:id])
     if article.merge_with(params[:merge_with])
       flash[:notice] = _("Articles successfully merged!")
@@ -155,7 +155,9 @@ class Admin::ContentController < Admin::BaseController
 
   def new_or_edit
     if not params[:merge_with].nil? and params[:merge_with] != ""
-      merge_with
+      if current_user.admin?
+        merge_with
+      end
     end
 
     id = params[:id]
@@ -179,6 +181,7 @@ class Admin::ContentController < Admin::BaseController
     if params[:merge_with].nil? or params[:merge_with] == ""
       @article.attributes = params[:article]
     end
+
 
     # TODO: Consider refactoring, because double rescue looks... weird.
         
