@@ -13,9 +13,7 @@ class Admin::ContentController < Admin::BaseController
 
   def index
     if not params[:merge_with].nil?
-      if current_user.admin?
         merge_with
-      end
     end
     @search = params[:search] ? params[:search] : {}
     
@@ -155,9 +153,7 @@ class Admin::ContentController < Admin::BaseController
 
   def new_or_edit
     if not params[:merge_with].nil? and params[:merge_with] != ""
-      if current_user.admin?
         merge_with
-      end
     end
 
     id = params[:id]

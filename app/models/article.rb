@@ -469,17 +469,18 @@ class Article < Content
 
   def merge_with(other_article_id)
     other_article = Article.find_by_id(other_article_id)
-
-    if self == other_article
+    if self == other_article or other_article == nil
       return false
     end
-
-    self.body = self.body + other_article.body
+    self.body += other_article.body
     self.save!
     puts "after self.save first time: ", self.body
-    self.comments << other_article.comments
+    for comment in other_article.comments
+      comment.article = self
+    end
+    self.comments += other_article.comments
     self.save!
-    other_article.destroy
+    #other_article.destroy
     return true
   end
 
