@@ -12,6 +12,10 @@ class Admin::ContentController < Admin::BaseController
   end
 
   def index
+    if not params[:merge_with].nil?
+      puts "index merged with **********************"
+      merge_with
+    end
     @search = params[:search] ? params[:search] : {}
     
     @articles = Article.search_with_pagination(@search, {:page => params[:page], :per_page => this_blog.admin_display_elements})
@@ -140,6 +144,13 @@ class Admin::ContentController < Admin::BaseController
   def real_action_for(action); { 'add' => :<<, 'remove' => :delete}[action]; end
 
   def new_or_edit
+    puts "I'm hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee :("
+    if not params[:merge_with].nil? and params[:merge_with] != ""
+      puts "HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
+      merge_with
+    else
+      puts "it's nil****************************"
+    end
     id = params[:id]
     id = params[:article][:id] if params[:article] && params[:article][:id]
     @article = Article.get_or_build_article(id)
@@ -240,4 +251,18 @@ class Admin::ContentController < Admin::BaseController
   def setup_resources
     @resources = Resource.by_created_at
   end
+
+  def merge_with
+    puts "lalalalalala"
+    article = Article.find_by_id(params[:id])
+    if article.merge_with(params[:merge_with])
+      flash[:notice] = _("Articles successfully merged!")
+    else
+      flash[:notice] = _("Articles couldn't be merged")
+    end
+  end
+  #   puts "hereeeeeeeeeeeeeeeeeeee lalalalalala"
+  #   article = Article.find_by_id(params[:id])
+
+  # end
 end

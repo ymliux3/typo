@@ -16,6 +16,8 @@ class ContentController < ApplicationController
     end
   end
 
+
+
   include LoginSystem
   before_filter :setup_themer
   helper :theme
@@ -33,4 +35,5 @@ class ContentController < ApplicationController
   def theme_layout
     this_blog.current_theme.layout(self.action_name)
   end
+
 end

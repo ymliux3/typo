@@ -100,7 +100,6 @@ class ArticlesController < ContentController
     render "errors/404", :status => 404
   end
 
-
   ### Deprecated Actions ###
 
   def archives
