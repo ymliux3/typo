@@ -2,6 +2,16 @@ require 'base64'
 
 module Admin; end
 class Admin::ContentController < Admin::BaseController
+
+  def merge_with
+    article = Article.find_by_id(params[:id])
+    if article.merge_with(params[:merge_with])
+      flash[:notice] = _("Articles successfully merged!")
+    else
+      flash[:notice] = _("Articles couldn't be merged")
+    end
+  end
+
   layout "administration", :except => [:show, :autosave]
 
   cache_sweeper :blog_sweeper
@@ -116,15 +126,6 @@ class Admin::ContentController < Admin::BaseController
       return true
     end
     render :text => nil
-  end
-
-  def merge_with
-    article = Article.find_by_id(params[:id])
-    if article.merge_with(params[:merge_with])
-      flash[:notice] = _("Articles successfully merged!")
-    else
-      flash[:notice] = _("Articles couldn't be merged")
-    end
   end
 
   protected
