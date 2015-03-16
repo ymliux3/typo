@@ -128,7 +128,7 @@ class Admin::ContentController < Admin::BaseController
     render :text => nil
   end
 
-  protected
+  # protected
 
   def get_fresh_or_existing_draft_for_article
     if @article.published and @article.id
